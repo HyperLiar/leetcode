@@ -17,7 +17,7 @@ func searchStart(nums []int, start, end, target int) int {
 		return -1
 	}
 
-	if end - start <=1 {
+	if end - start <= 1 {
 		if nums[start] == target {
 			return start
 		} else if nums[end] == target {
