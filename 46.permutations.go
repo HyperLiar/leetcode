@@ -22,8 +22,11 @@ func backTrack(result *[][]int, cur *[]int, nums []int, now, max int) {
 	}
 
 	for i := now; i < max; i++ {
-		temp := i
-		backTrack()
+		nums[now], nums[i] = nums[i], nums[now]
+		*cur = append(*cur, nums[now])
+		backTrack(result, cur, nums, now+1, max)
+		*cur = (*cur)[0:len(*cur)-1]
+		nums[now], nums[i] = nums[i], nums[now]
 	}
 }
 // @lc code=end
