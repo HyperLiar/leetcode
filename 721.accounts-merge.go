@@ -6,91 +6,91 @@
 
 // @lc code=start
 func accountsMerge(accounts [][]string) [][]string {
-    idList := make(map[int]string)
-	emailToId := make(map[string]int)
-	uf := newUnionFind(len(accounts))
+	emailToAccountId := make(map[string]int)
 
-	for i := 0; i < len(accounts); i++ {
-		idList[i] = accounts[i][0]
-		for j := 1; j < len(accounts[i]); j++ {
-			currentEmail := accounts[i][j]
-			if _, ok := emailToId[i]; ok {
-				uf.unify(i, emailToId[currentEmail])
+	// union
+	uf := newUnionFind(len(accounts))
+	for accountId, emails := range accounts {
+		for i := 1; i < len(emails); i++ {
+			if id, ok := emailToAccountId[emails[i]]; ok {
+				uf.union(id, accountId)
 			} else {
-				emailToId[currentEmail] = i
+				emailToAccountId[emails[i]] = accountId
 			}
 		}
 	}
 
-	idToEmail := make(map[int][]string)
-
-	for email, id := range emailToId {
-		sourceId := uf.find(id)
-
-		if _, ok := emailToId[id];!ok {
-			idToEmail[id] = []string{}
-		}
-
-		idToEmail[id] = append(idToEmail[id], email)
+	// find
+	for i := 0; i < len(accounts); i++ {
+		uf.parent[i] = uf.find(i)
 	}
 
-	res := make([][]string, 0)
+	emailListMap := make(map[int][]string)
+	for email, accountId := range emailToAccountId {
+		rootAccount := uf.find(accountId)
+		if _, ok := emailListMap[rootAccount]; !ok {
+			emailListMap[rootAccount] = []string{accounts[rootAccount][0]}
+		}
 
-	for id, emailList := range idToEmail {
-		sort.Strings(emailList)
-		temp := []string{idList[id]}
-		temp = append(temp, emailList...)
-		res = append(res, temp)
+		emailListMap[rootAccount] = append(emailListMap[rootAccount], email)
+	}
+	// make result
+	res := make([][]string, len(emailListMap))
+	resIdx := 0
+	for _, emailList := range emailListMap {
+		sort.Strings(emailList[1:])
+		res[resIdx] = emailList
+		resIdx++
 	}
 
 	return res
 }
 
 type UnionFind struct {
-	size int
+	size   int
 	parent []int
-	rank []int
+	rank   []int
 }
 
-func newUnionFind(size int) UnionFind {
-	uf := UnionFind{size:size}
-	uf.parent = make([]int, size)
-	uf.rank = make([]int, rank)
+func newUnionFind(n int) UnionFind {
+	uf := UnionFind{size: n}
+	uf.parent = make([]int, n)
+	uf.rank = make([]int, n)
+
+	for i := 0; i < n; i++ {
+		uf.parent[i] = i
+	}
 
 	return uf
 }
 
-func (uf *UnionFind)find(id int) int {
-	root := id
-	// find root
-	for root != uf.parent[root] {
-		root = uf.parent[root]
-	}
+// union p q
+func (uf *UnionFind) union(p, q int) {
+	rootP, rootQ := uf.find(p), uf.find(q)
 
-	// set all node in path to root
-	for id != root {
-		next = uf.parent[id]
-		uf.parent[id] = root
-		id = next
-	}
-
-	return root
-}
-
-func (uf *UnionFind) unify(id1, id2 int) {
-	root1, root2 := uf.find(id1), uf.find(id2)
-
-	if root1 == root2 {
+	if rootP == rootQ {
 		return
 	}
 
-	if uf.rank[id1] < uf.rank[id2] {
-		uf.parent[root1] = root2
-		uf.rank[root2] += uf.rank[root1]
+	if uf.rank[rootP] > uf.rank[rootQ] {
+		uf.parent[rootQ] = rootP
+		uf.rank[rootP] += uf.rank[rootQ]
 	} else {
-		uf.parent[root2] = root1
-		uf.rank[root1] += uf.rank[root2]
+		uf.parent[rootP] = rootQ
+		uf.rank[rootQ] += uf.rank[rootP]
 	}
+	uf.size--
 }
+
+// find root of p
+func (uf *UnionFind) find(p int) int {
+	for uf.parent[p] != p {
+		uf.parent[p] = uf.parent[uf.parent[p]]
+		p = uf.parent[p]
+	}
+
+	return p
+}
+
 // @lc code=end
 
