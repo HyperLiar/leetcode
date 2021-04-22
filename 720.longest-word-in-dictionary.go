@@ -6,56 +6,56 @@
 
 // @lc code=start
 func longestWord(words []string) string {
-	trie := Trie{}
+	trie := Trie{end: true}
 	maxCount := 0
 	maxWord := ""
 	for _, word := range words {
-		trie.insert(word, &maxCount, &maxWord)
+		trie.insert(word)
 	}
+
+	trie.search(0, "", &maxCount, &maxWord)
 
 	return maxWord
 }
 
 type Trie struct {
 	end      bool
-	count    int
 	children [26]*Trie
 }
 
-func (this *Trie) insert(word string, maxCount *int, maxWord *string) {
+func (this *Trie) insert(word string) {
 	temp := this
 
-	count := 0
 	for i := 0; i < len(word); i++ {
 		idx := word[i] - 'a'
 
 		if temp.children[idx] == nil {
 			temp.children[idx] = &Trie{}
 		}
-		if temp.end {
-			count++
-		}
 
 		temp = temp.children[idx]
 	}
 
 	temp.end = true
-	temp.count = count
-	temp.addCount(word, maxCount, maxWord)
 }
 
-func (this *Trie) addCount(word string, maxCount *int, maxWord *string) {
-	this.count++
-	fmt.Println(word, *maxCount, *maxWord)
-	if this.count > *maxCount || (this.count == *maxCount && *maxWord > word) {
+func (this *Trie) search(count int, word string, maxCount *int, maxWord *string) {
+	if !this.end {
+		return
+	}
+
+	if count > *maxCount || (count == *maxCount && word < *maxWord) {
+		*maxCount = count
 		*maxWord = word
-		*maxCount = this.count
 	}
 	for i := 0; i < len(this.children); i++ {
-		if this.children[i] != nil && this.children[i].end {
-			nowWord := word + string(byte('a'+i))
-			this.children[i].addCount(nowWord, maxCount, maxWord)
+		if this.children[i] == nil {
+			continue
 		}
+
+		newWord := word + string(byte('a'+i))
+		
+		this.children[i].search(count+1, newWord, maxCount, maxWord)
 	}
 }
 
