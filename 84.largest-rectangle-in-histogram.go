@@ -6,40 +6,47 @@
 
 // @lc code=start
 func largestRectangleArea(heights []int) int {
-	dp := make([][2]int, len(heights))
-	for i := 0; i < len(heights); i++ {
-		dp[i] = [2]int{i, i}
+	l := len(heights)
+	if l == 0 {
+		return 0
+	}
+	
+	dpLeft := make([]int, l)
+	dpRight := make([]int, l)
+
+	for i := 1; i < l; i++ {
+		dpLeft[i] = i
+		j := i
+
+		for dpLeft[j] - 1 >= 0 && heights[dpLeft[j] - 1] >= heights[i] {
+            j = dpLeft[j] - 1
+        }
+        dpLeft[i] = dpLeft[j]
 	}
 
-	for i := 1; i < len(heights); i++ {
-		left, right := i, i
+	dpRight[l-1] = l-1
 
-        for dp[left][0] - 1 >= 0 && heights[dp[left][0] - 1] >= heights[i] {
-			left = dp[left][0]-1
-		}
+	for i := l-2; i >= 0; i-- {
+		dpRight[i] = i
+		j := i
 
-		for right < len(heights) && heights[right] >= heights[i] {
-			right++
+		for dpRight[j] + 1 <= l-1 && heights[dpRight[j]+1] >= heights[i] {
+			j = dpRight[j]+1
 		}
-		dp[i][1] = right - 1
-
-			
-		for left >= 0 && heights[left] >= heights[i] {
-			left--
-		}
-		dp[i][0] = left + 1
+		dpRight[i] = dpRight[j]
 	}
-	fmt.Println(dp)
 
-	max := heights[0]
-	for i := 0; i < len(heights); i++ {
-		area := (dp[i][1] - dp[i][0] + 1) * heights[i]
-		if area > max {
-			max = area
+	//fmt.Println(dpLeft, dpRight)
+
+	result := 0
+	for i := 0; i < l; i++ {
+		x := heights[i] * (dpRight[i] - dpLeft[i] + 1) 
+		if x > result {
+			result = x
 		}
 	}
 
-	return max
+	return result
 }
 
 // @lc code=end
