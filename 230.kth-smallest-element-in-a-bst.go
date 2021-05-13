@@ -14,16 +14,10 @@
  * }
  */
 func kthSmallest(root *TreeNode, k int) int {
-
+	return iterate(root, k)
 }
 
-func inorder(root *TreeNode, k int, *result) {
-	if root == nil {
-		return
-	}
-}
-
-func iterate(root *TreeNode, k int) {
+func iterate(root *TreeNode, k int) int {
 	// inorder traversal
 	stack := make([]*TreeNode, 0)
 	for {
@@ -42,6 +36,8 @@ func iterate(root *TreeNode, k int) {
 
 		root = root.Right
 	}
+
+	return 0
 }
 
 // @lc code=end

@@ -13,23 +13,14 @@ func jump(nums []int) int {
 
 	for i := 0; i < len(nums); i++ {
 		for j := 1; j <= nums[i]; j++ {
-			if i+j >= len(nums) {
+			if i + j >= len(nums) {
 				break
 			}
 			dp[i+j] = min(dp[i+j], dp[i]+1)
 		}
 	}
 
-	//fmt.Println(dp)
 	return dp[len(nums)-1]
-}
-
-func max(i, j int) int {
-	if i > j {
-		return i
-	}
-
-	return j
 }
 
 func min(i, j int) int {
