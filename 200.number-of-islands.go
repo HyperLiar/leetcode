@@ -6,36 +6,35 @@
 
 // @lc code=start
 func numIslands(grid [][]byte) int {
-    hor, ver := len(grid), len(grid[0])
-
+	hor, ver := len(grid), len(grid[0])
 	sum := 0
-	for x := 0; x < ver; x++ {
-		for y := 0; y < hor; y++ {
-			if grid[y][x] == '1' {
+	for i := 0; i < hor; i++ {
+		for j := 0; j < ver; j++ {
+			if grid[i][j] == '1' {
 				sum++
-				dfs(grid, x, y, ver, hor)
+				dfs(grid, i, j, hor, ver)
 			}
 		}
 	}
 
 	return sum
 }
-
-func dfs(grid [][]byte, x, y, ver, hor int) {	
-	if x < 0 || y < 0 || x > ver-1 || y > hor-1 {
+func dfs(grid [][]byte, i, j, hor, ver int) {
+	if i < 0 || j < 0 || i == hor || j == ver {
 		return
 	}
 
-	if grid[y][x] == '1' {
-		grid[y][x] = '0'
+	if grid[i][j] == '1' {
+		grid[i][j] = '0'
 	} else {
 		return
 	}
 
-	dfs(grid, x+1, y, ver, hor)
-	dfs(grid, x, y+1, ver, hor)
-	dfs(grid, x-1, y, ver, hor)
-	dfs(grid, x, y-1, ver, hor)
+	dfs(grid, i-1, j, hor, ver)
+	dfs(grid, i+1, j, hor, ver)
+	dfs(grid, i, j-1, hor, ver)
+	dfs(grid, i, j+1, hor, ver)
 }
+
 // @lc code=end
 
