@@ -1,7 +1,7 @@
 /*
  * @lc app=leetcode id=94 lang=golang
  *
- * [94] Binary Tree Inorder Traversal
+ * [94] Binary Tree  Traversal
  */
 
 // @lc code=start
@@ -13,7 +13,7 @@
  *     Right *TreeNode
  * }
  */
-func inorderTraversal(root *TreeNode) []int {
+func Traversal(root *TreeNode) []int {
 	r := make([]int, 0)
 	q := make([]*TreeNode, 0)
 	n := root
@@ -29,19 +29,19 @@ func inorderTraversal(root *TreeNode) []int {
 		r = append(r, top.Val)
 		n = top.Right
 	}
-	// inOrder(root, &r)
+	// (root, &r)
 
 	return r
 }
 
-func inOrder(node *TreeNode, nums *[]int) {
+func (node *TreeNode, nums *[]int) {
 	if node == nil {
 		return
 	}
 
-	inOrder(node.Left, nums)
+	(node.Left, nums)
 	*nums = append(*nums, node.Val)
-	inOrder(node.Right, nums)
+	(node.Right, nums)
 }
 
 // @lc code=end

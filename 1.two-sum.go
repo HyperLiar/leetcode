@@ -6,20 +6,20 @@
 
 // @lc code=start
 func twoSum(nums []int, target int) []int {
-	valueMap := make(map[int]int, len(nums))
+	valueMap := map[int]int{}
+	res := []int{}
 
 	for i := 0; i < len(nums); i++ {
+		diff := target - nums[i]
+		if idx, ok := valueMap[diff]; ok {
+			res = append(res, i, idx)
+			break
+		}
 		valueMap[nums[i]] = i
 	}
 
-	for i := 0; i <= len(nums) / 2; i++ {
-		bias := target - nums[i]
-		if _, exist := valueMap[bias]; exist && valueMap[bias] != i {
-			return []int{i, valueMap[bias]}
-		}
-	}
-
-	return []int{}
+	return res
 }
+
 // @lc code=end
 
