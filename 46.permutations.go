@@ -6,7 +6,7 @@
 
 // @lc code=start
 func permute(nums []int) [][]int {
-    result := make([][]int, 0)
+    result := x
 	cur := make([]int, 0)
 
 	backTrack(&result, &cur, nums, 0, len(nums))
