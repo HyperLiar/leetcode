@@ -18,7 +18,7 @@ func exist(board [][]byte, word string) bool {
 
 	// search
 	for i := 0; i < len(board); i++ {
-		for j := 0; j < len(board[0]); j++ {
+		for j := 0; j < len(board[0]); j++ {1.
 			if dfs(board, word, i, j) {
 				return true
 			}
